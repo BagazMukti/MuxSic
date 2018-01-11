@@ -24,7 +24,7 @@ while $loop; do
 > list           show playlist
 > play <number>  play music
 > play all       play all music on playlist
-> chdir          change playlist directory (current: $DIR)
+> chdir <path>   change playlist directory (current: $DIR)
 > help           show this help
 > exit           exit from this program\n"
 	elif [ "$cmd" = "list" ]; then
