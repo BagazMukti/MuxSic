@@ -6,7 +6,6 @@
 # Website: bagaz.org
 # Contact: me@bl33dz.me
 
-trap '' 2
 export DIR="$HOME/Music"
 
 echo -e " _  _  _  _  _  _      ____  __  ___
@@ -18,6 +17,7 @@ echo -e " _  _  _  _  _  _      ____  __  ___
 loop=true
 
 while $loop; do
+	trap '' 2
 	read -p "muxsic> " cmd
 	if [ "$cmd" = "help" ]; then
 		echo -e "List of commands:
@@ -38,15 +38,18 @@ while $loop; do
 		echo
 	elif echo "$cmd" | grep -q "play"; then
 		arg=$(echo "$cmd" | cut -d " " -f 2)
-		if [ "$arg" = "all" ]; then
-			mpv --playlist="$DIR" --loop-playlist
-		else
-			getlist=$(ls $DIR | grep mp3)
-			replace=${getlist// /%%}
-			list=()
-			for m in $replace; do
-				list+=("$m")
+		getlist=$(ls $DIR | grep mp3)
+		replace=${getlist// /%%}
+		list=()
+		for m in $replace; do
+			list+=("$m")
+		done
+		if [ $arg = "all" ]; then
+			for ms in $replace; do
+				trap 'break' 2
+				mpv "$DIR/${ms//%%/ }"
 			done
+		else
 			music=${list[(($arg-1))]}
 			mpv "$DIR/${music//%%/ }"
 		fi
